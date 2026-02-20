@@ -20,16 +20,22 @@ static constexpr bn::fixed MIN_Y = -HALF_SCREEN_HEIGHT;
 static constexpr bn::fixed MAX_Y = HALF_SCREEN_HEIGHT;
 
 // Starting speed of a bouncer
-static constexpr bn::fixed BASE_SPEED = 2;
+//static constexpr bn::fixed BASE_SPEED = 2;
 
 // Maximum number of bouncers on screen at once
 static constexpr int MAX_BOUNCERS = 20;
 
+bn::random x_random = bn::random();
+bn::random y_random = bn::random();
+
+bn::random x_location = bn::random();
+bn::random y_location = bn::random();
+
 class Bouncer {
     public:
         bn::sprite_ptr sprite = bn::sprite_items::dot.create_sprite();
-        bn::fixed x_speed = BASE_SPEED;
-        bn::fixed y_speed = BASE_SPEED;
+        bn::fixed x_speed = x_random.get_int(1, 3);
+        bn::fixed y_speed = y_random.get_int(1, 3);
 
         void update() {
             bn::fixed x = sprite.x();
@@ -89,8 +95,19 @@ bn::fixed average_x(bn::vector<Bouncer, MAX_BOUNCERS>& bouncers) {
 
 void add_bouncer(bn::vector<Bouncer, MAX_BOUNCERS>& bouncers) {
     // Only add if we're below the maximum
-    if(bouncers.size() < bouncers.max_size()) {
-        bouncers.push_back(Bouncer());
+    if (bouncers.size() < bouncers.max_size()) {
+        Bouncer bouncer = Bouncer();
+
+        bn::fixed x = bouncer.sprite.x();
+        bn::fixed y = bouncer.sprite.y();
+
+        x = x_location.get_int((-1 * bn::display::width() / 2) + 1, (bn::display::width() / 2) + 1);
+        y = y_location.get_int((-1 * bn::display::height() / 2) + 1, (bn::display::height() / 2) - 1);
+
+        bouncer.sprite.set_x(x);
+        bouncer.sprite.set_y(y);
+
+        bouncers.push_back(bouncer);
     }
 }
 
@@ -116,6 +133,12 @@ int main() {
         for (Bouncer& bouncer : bouncers) {
             bouncer.update();
         }
+
+        x_random.update();
+        y_random.update();
+
+        x_location.update();
+        y_location.update();
 
         bn::core::update();
     }
