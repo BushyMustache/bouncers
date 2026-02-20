@@ -6,6 +6,8 @@
 #include <bn_random.h>
 #include <bn_vector.h>
 #include <bn_log.h>
+#include <bn_backdrop.h>
+#include <bn_color.h>
 
 #include "bn_sprite_items_dot.h"
 
@@ -113,6 +115,7 @@ void add_bouncer(bn::vector<Bouncer, MAX_BOUNCERS>& bouncers) {
 
 int main() {
     bn::core::init();
+    bn::backdrop::set_color(bn::color(0,20,20));
 
     // Sprites and x speeds of bouncers
     // Items with the same index correspond to each other
