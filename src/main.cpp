@@ -95,6 +95,24 @@ bn::fixed average_x(bn::vector<Bouncer, MAX_BOUNCERS>& bouncers) {
     return x_average;
 }
 
+bn::fixed average_y(bn::vector<Bouncer, MAX_BOUNCERS>& bouncers) {
+    // Add all x positions together
+    bn::fixed y_sum = 0;
+    for (Bouncer& bouncer : bouncers) {
+        y_sum += bouncer.sprite.y();
+    }
+
+    bn::fixed y_average= y_sum;
+
+    // Only divide if we have 1 or more
+    // Prevents division by 0
+    if (bouncers.size() > 0) {
+        y_average /= bouncers.size();
+    }
+
+    return y_average;
+}
+
 void add_bouncer(bn::vector<Bouncer, MAX_BOUNCERS>& bouncers) {
     // Only add if we're below the maximum
     if (bouncers.size() < bouncers.max_size()) {
@@ -130,6 +148,7 @@ int main() {
 
         if(bn::keypad::b_pressed()) {
             BN_LOG("Average x: ", average_x(bouncers));
+            BN_LOG("Average y: ", average_y(bouncers));
         }
 
         // for each bouncer
